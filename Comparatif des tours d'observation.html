@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>Comparatif des tours d'observation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Inspiration : mobilier scandinave pour enfants. Grège chaud en bandeau, cartes blanches sans bordure, vert sauge pour l'action, terre cuite pour l'alerte */
+  --bg:#ffffff;
+  --sand:#eae5df;
+  --subtle:#f7f5f2;
+  --ink:#3c3c3b;
+  --muted:#66635d;
+  --faint:#8f8b84;
+  --line:#e4dfd6;
+  --accent:#8c9866;
+  --accent-ink:#56622f;
+  --accent-soft:#eef0e5;
+  --good:#5d7a35;
+  --mid:#a8772a;
+  --low:#b4563a;
+  --warn-bg:#f6eee4;
+  --radius:12px;
+  --photo-bg:#f7f5f2;
+  --font-display:"Source Sans 3", "Source Sans Pro", "Segoe UI", system-ui, sans-serif;
+  --font-body:"Source Sans 3", "Source Sans Pro", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: only light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{background:#ffffff;color-scheme:only light}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.12;letter-spacing:-.005em;color:var(--ink)}
+h1{font-size:clamp(2rem,4.2vw,3.1rem);font-weight:700}
+h2{font-size:1.32rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.num{font-variant-numeric:tabular-nums}
+button,select,input{font:inherit}
+:focus-visible{outline:2px solid var(--accent-ink);outline-offset:2px}
+
+/* Bandeau d'annonce */
+.strip{background:var(--sand);font-size:.8rem;color:var(--ink)}
+.strip .wrap{display:flex;justify-content:space-between;gap:16px;padding-top:7px;padding-bottom:7px;flex-wrap:wrap}
+
+/* En-tête */
+header.top{padding:52px 0 10px;display:grid;gap:12px;max-width:780px}
+.eyebrow{font-size:.85rem;color:var(--muted);font-weight:600}
+.lede{color:var(--ink);margin:0;font-size:1.1rem;max-width:62ch}
+.note{font-size:.9rem;color:var(--muted)}
+.note a{font-weight:600}
+
+/* Trio de tête */
+.podium-wrap{margin:34px 0 48px}
+.section-label{font-size:1.32rem;font-weight:700;margin:0 0 16px;color:var(--ink)}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pod{display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:center;padding:14px;border-radius:var(--radius);background:var(--subtle)}
+.pod.first{background:var(--sand)}
+.pod .rank{font-size:.8rem;font-weight:700;color:var(--accent-ink)}
+.pod .nm{font-weight:700;font-size:1.06rem;line-height:1.25}
+.pod .sub{font-size:.85rem;color:var(--muted)}
+.pod .big{font-family:var(--font-display);font-size:2.1rem;font-weight:700;line-height:1}
+.pod .big small{display:block;font-family:var(--font-body);font-size:.72rem;font-weight:600;color:var(--muted);text-align:right}
+.pod .illu{border:0}
+
+/* Bande grège qui porte le catalogue */
+.band{background:var(--sand);padding:44px 0 56px}
+.band-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.band-head h2{font-size:1.5rem}
+
+/* Mise en page principale */
+.layout{display:grid;grid-template-columns:268px 1fr;gap:28px;align-items:start}
+aside.filters{position:sticky;top:16px;background:var(--bg);border-radius:var(--radius);padding:20px;display:grid;gap:22px}
+.fgroup{display:grid;gap:9px}
+.fgroup h3{font-family:var(--font-body);font-size:1rem;font-weight:700;color:var(--ink)}
+.wrow{display:grid;grid-template-columns:84px 1fr 22px;gap:8px;align-items:center;font-size:.92rem}
+.wrow output{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--ink);background:transparent;color:var(--ink);padding:5px 12px;border-radius:var(--radius);font-size:.86rem;cursor:pointer}
+.chip:hover{background:var(--subtle)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--ink);border-radius:var(--radius);overflow:hidden;background:transparent}
+.seg button{border:0;background:transparent;color:var(--ink);padding:7px 4px;font-size:.86rem;cursor:pointer}
+.seg button+button{border-left:1px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
+.checks{display:grid;gap:8px;font-size:.9rem}
+.checks label{display:flex;gap:8px;align-items:flex-start}
+.checks input{accent-color:var(--accent);margin-top:4px}
+.reset{justify-self:stretch;border:1px solid var(--ink);background:transparent;color:var(--ink);font-weight:600;font-size:.9rem;cursor:pointer;padding:9px 12px;border-radius:var(--radius)}
+.reset:hover{background:var(--subtle)}
+
+/* Barre d'outils */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.toolbar .count{font-size:.95rem;color:var(--ink);font-weight:600}
+.toolbar .right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.toolbar label{font-size:.9rem;color:var(--muted)}
+select{font-size:.9rem;padding:8px 10px;border-radius:var(--radius);border:1px solid var(--ink);background:var(--bg);color:var(--ink)}
+.toggle{display:inline-flex;border:1px solid var(--ink);border-radius:var(--radius);overflow:hidden;background:var(--bg)}
+.toggle button{font-size:.9rem;padding:8px 14px;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:600}
+
+/* Fiches */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{border:0;border-radius:var(--radius);background:var(--bg);display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .2s, transform .2s}
+.card:hover{box-shadow:0 10px 30px rgba(60,55,45,.10)}
+.card.out{outline:1px dashed var(--faint);outline-offset:-1px}
+.c-head{display:grid;grid-template-columns:104px 1fr auto;gap:14px;padding:16px 16px 12px;align-items:start}
+.illu{width:100%;aspect-ratio:1/1.1;border-radius:10px;background:var(--photo-bg);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.illu img{max-width:90%;max-height:88%;object-fit:contain;display:block;mix-blend-mode:multiply}
+.illu svg{width:78%;height:auto}
+.illu.schema{background:var(--subtle)}
+.illu .cap{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.6rem;color:var(--faint)}
+.c-id h3{font-size:1.14rem;line-height:1.2}
+.c-id .brand{font-size:.85rem;color:var(--muted);margin-top:2px}
+.c-id .price{font-weight:600;margin-top:6px;font-variant-numeric:tabular-nums}
+.score{display:grid;justify-items:center;align-content:start;min-width:58px}
+.score .val{font-family:var(--font-display);font-size:1.9rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.score .lbl{font-size:.68rem;color:var(--muted);font-weight:600;margin-top:3px;text-align:center}
+.score .rk{font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:4px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 12px}
+.pill{font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:8px;background:var(--subtle);color:var(--muted);white-space:nowrap}
+.pill.ok{background:color-mix(in srgb, var(--good) 13%, transparent);color:var(--good)}
+.pill.warn{background:color-mix(in srgb, var(--mid) 15%, transparent);color:var(--mid)}
+.pill.bad{background:color-mix(in srgb, var(--low) 13%, transparent);color:var(--low)}
+.subscores{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;padding:12px 16px;border-top:1px solid var(--line)}
+.ss{display:grid;gap:5px}
+.ss .top{display:flex;justify-content:space-between;font-size:.86rem}
+.ss .top span:first-child{color:var(--muted)}
+.ss .top b{font-variant-numeric:tabular-nums}
+.track{height:6px;background:var(--subtle);border-radius:6px;overflow:hidden}
+.fill{height:100%;border-radius:6px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;padding:12px 16px;border-top:1px solid var(--line);font-size:.88rem}
+.facts div span{display:block;font-size:.76rem;color:var(--faint);font-weight:600}
+.reviewline{padding:10px 16px;border-top:1px solid var(--line);font-size:.88rem;display:flex;gap:8px;align-items:baseline}
+.reviewline .k{font-size:.76rem;color:var(--faint);font-weight:600;white-space:nowrap}
+.alert{margin:0 16px 12px;padding:9px 12px;border-radius:10px;background:var(--warn-bg);font-size:.85rem;color:var(--ink)}
+details.more{border-top:1px solid var(--line);margin-top:auto}
+details.more summary{list-style:none;cursor:pointer;padding:12px 16px;font-size:.9rem;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center}
+details.more summary:hover{color:var(--accent-ink)}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:"+";display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--ink);border-radius:50%;font-size:1rem;line-height:1;font-weight:400}
+details.more[open] summary::after{content:"−"}
+.more-body{padding:0 16px 16px;display:grid;gap:14px;font-size:.88rem}
+.more-body h4{margin:0 0 4px;font-size:.8rem;color:var(--faint)}
+.more-body dl{margin:0;display:grid;grid-template-columns:100px 1fr;gap:4px 10px}
+.more-body dt{color:var(--muted)}
+.more-body dd{margin:0}
+.more-body ul{margin:0;padding-left:16px;display:grid;gap:4px}
+.more-body p{margin:0 0 4px}
+.tag{font-size:.72rem;font-weight:700;margin-right:4px}
+.tag.ok{color:var(--good)} .tag.bad{color:var(--low)}
+.more-body .link{font-weight:600}
+.empty{padding:40px;text-align:center;color:var(--muted);background:var(--bg);border-radius:var(--radius)}
+
+/* Tableau */
+.tablewrap{overflow-x:auto;border-radius:var(--radius);background:var(--bg)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:1400px}
+th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+thead th{position:sticky;top:0;background:var(--subtle);font-size:.78rem;color:var(--muted)}
+th button{all:unset;cursor:pointer;font-weight:700}
+tbody tr:hover{background:var(--subtle)}
+td.n{text-align:right}
+td.thumb{width:62px} td.thumb .illu{width:54px}
+.badge{display:inline-block;min-width:36px;text-align:center;padding:2px 6px;border-radius:8px;font-weight:700;font-variant-numeric:tabular-nums;color:#fff}
+.badge.na{background:var(--line);color:var(--muted)}
+tr.out td{opacity:.7}
+
+/* Bas de page */
+.info{margin:56px 0 0;display:grid;gap:14px}
+.info details{border-radius:var(--radius);background:var(--subtle)}
+.info summary{cursor:pointer;padding:18px 20px;font-family:var(--font-display);font-weight:700;font-size:1.15rem;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.info summary::-webkit-details-marker{display:none}
+.info summary::after{content:"+";display:grid;place-items:center;width:30px;height:30px;border:1px solid var(--ink);border-radius:50%;font-weight:400}
+.info details[open] summary::after{content:"−"}
+.info .inner{padding:0 20px 20px;display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:.95rem}
+.info .inner ul{padding-left:18px;margin:6px 0 0;display:grid;gap:6px}
+.info h3{font-size:1rem;margin-top:4px}
+.recall{display:grid;gap:8px;margin-top:8px}
+.recall div{border-left:3px solid var(--low);padding:2px 10px;font-size:.9rem}
+footer{padding:32px 0 56px;font-size:.85rem;color:var(--muted)}
+footer ol{padding-left:18px;display:grid;gap:3px}
+
+@media (max-width:980px){
+  .layout{grid-template-columns:1fr}
+  aside.filters{position:static}
+  .podium{grid-template-columns:1fr}
+  .info .inner{grid-template-columns:1fr}
+}
+@media (max-width:420px){
+  .wrap{padding:0 16px}
+  .c-head{grid-template-columns:76px 1fr auto}
+  .pod{grid-template-columns:64px 1fr auto}
+  .facts,.subscores{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion: reduce){ .card{transition:none} }
+</style>
+</head>
+<body>
+<div class="strip"><div class="wrap"><span>Comparatif indépendant, sans lien commercial</span><span>18 modèles · 4 critères</span><span>Mis à jour le 8 novembre 2026</span></div></div>
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">Comparatif pour un enfant de 18 mois</span>
+    <h1>Tours d'observation : quel modèle choisir ?</h1>
+    <p class="lede">Dix-huit modèles notés sur la sécurité, la qualité, la durabilité et les avis clients. Réglez vos priorités à gauche : le classement se met à jour aussitôt.</p>
+    <p class="note">Les notes sont une évaluation argumentée, pas des tests en laboratoire. <a href="#methode">Voir la méthode</a></p>
+  </header>
+
+  <section class="podium-wrap" aria-labelledby="podium-t">
+    <h2 class="section-label" id="podium-t">Le trio de tête selon vos priorités</h2>
+    <div class="podium" id="podium"></div>
+  </section>
+</div>
+
+<div class="band">
+<div class="wrap">
+  <div class="band-head"><h2>Tous les modèles</h2></div>
+  <div class="layout">
+    <aside class="filters" aria-label="Filtres">
+      <div class="fgroup">
+        <h3>Vos priorités</h3>
+        <div class="wrow"><label for="w-s">Sécurité</label><input id="w-s" type="range" min="0" max="5" step="1" value="3"><output id="o-s">3</output></div>
+        <div class="wrow"><label for="w-q">Qualité</label><input id="w-q" type="range" min="0" max="5" step="1" value="2"><output id="o-q">2</output></div>
+        <div class="wrow"><label for="w-d">Durabilité</label><input id="w-d" type="range" min="0" max="5" step="1" value="2"><output id="o-d">2</output></div>
+        <div class="wrow"><label for="w-a">Avis</label><input id="w-a" type="range" min="0" max="5" step="1" value="2"><output id="o-a">2</output></div>
+      </div>
+      <div class="fgroup">
+        <h3>Fabrication</h3>
+        <div class="chips" id="origin-chips" role="group" aria-label="Lieu de fabrication">
+          <button class="chip" data-o="all" aria-pressed="true">Tous</button>
+          <button class="chip" data-o="fr" aria-pressed="false">France</button>
+          <button class="chip" data-o="eu" aria-pressed="false">Europe</button>
+          <button class="chip" data-o="us" aria-pressed="false">États-Unis</button>
+          <button class="chip" data-o="other" aria-pressed="false">Non confirmé</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <h3>Pliage</h3>
+        <div class="seg" id="fold" role="group" aria-label="Pliage">
+          <button data-f="any" aria-pressed="true">Tous</button>
+          <button data-f="yes" aria-pressed="false">Pliable</button>
+          <button data-f="no" aria-pressed="false">Fixe</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <h3>Budget</h3>
+        <div class="wrow" style="grid-template-columns:1fr 54px"><input id="budget" type="range" min="90" max="400" step="10" value="400" aria-label="Prix maximum"><output id="o-b" style="white-space:nowrap">400 €</output></div>
+        <div class="checks"><label><input type="checkbox" id="unk" checked> Inclure les modèles sans prix connu</label></div>
+      </div>
+      <div class="fgroup">
+        <h3>Affichage</h3>
+        <div class="checks">
+          <label><input type="checkbox" id="noavis"> Masquer les modèles sans avis</label>
+          <label><input type="checkbox" id="unver"> Masquer les données non revérifiées</label>
+          <label><input type="checkbox" id="chair"> Inclure la chaise haute Kaos Klapp</label>
+        </div>
+      </div>
+      <button class="reset" id="reset">Réinitialiser les filtres</button>
+    </aside>
+
+    <main>
+      <div class="toolbar">
+        <span class="count" id="count"></span>
+        <div class="right">
+          <label for="sort">Trier par</label>
+          <select id="sort">
+            <option value="g">Note globale</option>
+            <option value="s">Sécurité</option>
+            <option value="q">Qualité</option>
+            <option value="d">Durabilité</option>
+            <option value="a">Avis clients</option>
+            <option value="price">Prix croissant</option>
+          </select>
+          <div class="toggle" role="group" aria-label="Mode d'affichage">
+            <button id="v-cards" aria-pressed="true">Fiches</button>
+            <button id="v-table" aria-pressed="false">Tableau</button>
+          </div>
+        </div>
+      </div>
+      <div id="cards" class="grid"></div>
+      <div id="tableview" class="tablewrap" hidden></div>
+    </main>
+  </div>
+</div>
+</div>
+
+<div class="wrap">
+  <section class="info" aria-label="Informations complémentaires">
+    <details open>
+      <summary>Sécurité : ce qu'il faut savoir</summary>
+      <div class="inner">
+        <div>
+          <ul>
+            <li><strong>Aucune norme spécifique.</strong> Une norme volontaire ASTM est en préparation aux États-Unis depuis 2024, sans être finalisée. Le marquage EN 71-3 porte sur les substances chimiques des vernis, pas sur la stabilité.</li>
+            <li><strong>Lourde et large, c'est mieux.</strong> Consumer Reports a testé 16 tours : 13 ont échoué au test de stabilité. Son conseil : un modèle plus lourd avec une base plus large.</li>
+            <li><strong>Resserrez les vis régulièrement.</strong> La Guidecraft, qui avait réussi ce test, a été rappelée en mai 2026 car sa plateforme pouvait se desserrer.</li>
+            <li><strong>Le pliage ajoute un point de faiblesse</strong> (hypothèse appuyée sur deux rappels de modèles pliants).</li>
+            <li><strong>Toujours contre un meuble fixe</strong>, loin d'une fenêtre, et sous surveillance.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Modèles rappelés à éviter</h3>
+          <div class="recall">
+            <div><strong>Little Partners Grow 'N Stow</strong> (pliante) · nov. 2025 · plateforme qui peut s'effondrer</div>
+            <div><strong>Boon Pivot</strong> (pliante) · environ 117 000 unités · basculement</div>
+            <div><strong>Guidecraft Kitchen Helper</strong> · mai 2026 · plateforme qui se desserre</div>
+            <div><strong>Cosyland</strong> · mai 2026 · environ 125 200 unités · basculement</div>
+            <div><strong>Simplay3</strong> (ancienne version) · 2023 · basculement</div>
+          </div>
+        </div>
+      </div>
+    </details>
+    <details id="methode">
+      <summary>Méthode de notation</summary>
+      <div class="inner">
+        <div>
+          <h3>Sécurité</h3>
+          <ul>
+            <li>Largeur et poids de la base (stabilité latérale)</li>
+            <li>Pliage ou conversion : pénalité</li>
+            <li>Charge maximale ou certification documentée : bonus</li>
+            <li>Instabilité ou escalade signalées dans les avis : pénalité</li>
+          </ul>
+          <h3 style="margin-top:14px">Qualité et durabilité</h3>
+          <ul>
+            <li>Bois massif, puis contreplaqué de bouleau, puis MDF ou composite</li>
+            <li>Défauts de fabrication signalés, pièces d'usure, seconde vie, garantie</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Avis clients</h3>
+          <ul>
+            <li>Point de départ : (note sur 5 − 3) × 5, soit 4,5/5 → 7,5</li>
+            <li>Moins de 50 avis : −1 ; moins de 10 avis : plafond à 7</li>
+            <li>Avis publiés uniquement sur le site de la marque : −1</li>
+            <li>Défauts qui reviennent : −0,5 à −1</li>
+            <li>Sans avis exploitables : critère ignoré dans la note globale</li>
+          </ul>
+          <h3 style="margin-top:14px">Limites</h3>
+          <ul>
+            <li>Reddit n'a pas pu être consulté directement ; seuls quelques fils relayés ont été lus.</li>
+            <li>Les avis Amazon regroupent souvent plusieurs coloris.</li>
+            <li>Fiabilité : « Vérifiée », « Partielle » ou « Votre relevé » (données de votre tableau non recoupées).</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <p>Photos des fabricants et revendeurs (source sous chaque photo), réduites pour un usage personnel. Grandiraton, qui n'est plus vendue, a été retirée du comparatif.</p>
+    <p><strong>Sources principales</strong></p>
+    <ol>
+      <li><a href="https://www.amazon.de/dp/B0D25T8YY5">Amazon.de, babybay Littlefoot</a> · <a href="https://babybay.de/fr/babybay-tour-d-apprentissage-littlefoot-laque-blanc">babybay.de</a> · <a href="https://www.babybay.us/product/littlefoot-learning-tower">babybay USA</a></li>
+      <li><a href="https://www.amazon.de/dp/B08F6WJ79D">Amazon.de, tiSsi Felix</a> · <a href="https://www.babyartikel.de/prod/tissi-lernturm-felix-mint">babyartikel.de, tiSsi</a></li>
+      <li><a href="https://www.amazon.de/dp/B08TDBDRZ6">Amazon.de, Pinolino Fino</a> · <a href="https://www.bambinou.com/tour-observation-fino-bois-laque-pinolino-blanc">Bambinou</a> · <a href="https://www.guenstiger.de/Produkt/Pinolino/Fino_Lernturm_lackiert.html">guenstiger.de</a></li>
+      <li><a href="https://www.amazon.de/dp/B08F7DV147">Amazon.de, Ette Tete</a> · <a href="https://www.natureetdecouvertes.com/enfant/materiel-montessori/vie-pratique/tour-d-observation-montessori-grise-98350870">Nature &amp; Découvertes, Ette Tete</a></li>
+      <li><a href="https://www.amazon.de/dp/B0BSXW53DL">Amazon.de, Mamatoyz</a> · <a href="https://www.galaxus.nl/en/s10/producttype/toplist/relevance/learning-towers-3548">Galaxus</a></li>
+      <li><a href="https://sprout-kids.com/products/sous-chef-toddler-tower">Sprout, Sous-Chef</a> · <a href="https://fitwood.com/fr/products/verso-tour-dapprentissage-beige">FitWood, Verso</a> · <a href="https://www.babylist.com/gp/piccalio-mini-chef-foldable-toddler-tower/56885/2131373">Babylist, Piccalio</a> · <a href="https://piccalio.gorgias.help/en-US/why-is-my-foldable-helper-tower-wobbly-322417">Piccalio, FAQ</a></li>
+      <li><a href="https://motherandbaby.com/reviews/highchairs/kaos-klapp-foldable-high-chair-review">Mother&amp;Baby, Kaos Klapp</a> · <a href="https://ca.trustpilot.com/review/itskaos.com">Trustpilot, Kaos</a> · <a href="https://a.storyblok.com/f/285617987271271/x/1067e33fd1/kaos_a5_simple_instructions_wood_chairs.pdf">Notice Kaos Klapp</a></li>
+      <li><a href="https://www.amazon.fr/dp/B07RKS6BH3">Amazon.fr, Moblì Ully</a> · <a href="https://mamatoyz.com/kule-bend-learning-tower/">Mamatoyz, Kule Bend</a> · <a href="https://piccalio.com/products/foldable-toddler-tower">Piccalio, fiche produit</a></li>
+      <li><a href="https://www.klarstein.co.uk/Ully-learning-tower-Montessori-multiplex-40-5-x-86-x-38-cm-height-adjustable.html">Klarstein, Moblì Ully</a> · <a href="https://www.chambrekids.com/fr/mobilier-montessori/212649-tour-observation-montessori.html">Chambrekids</a> · <a href="https://www.consobaby.com/avis-tour-d-observation-montessori-chambrekids.html">ConsoBaby, Chambrekids</a></li>
+      <li><a href="https://franklinemily.com/products/toddler-tower">Franklin+Emily</a> · <a href="https://www.katehaa.com/en-eu/products/learning-kitchen-tower-foldable-natural">KateHaa</a> · <a href="https://hemmingsenkids.dk/products/susanne-l-ringst-rn-sammenklappelig">Hemmingsen Kids, Susanne</a></li>
+      <li><a href="https://www.maxi-cosi.fr/a-la-maison/toucan">Maxi-Cosi, Toucan</a> · <a href="https://monloove.com/products/tour-apprentissage-evolutive-floki">Loove, Floki</a> · <a href="https://www.janod.com/fr/1460-tour-d-observation.html">Janod</a> · <a href="https://marelou.fr/products/tour-observation-pliable-la-vigie">Marelou, La Vigie</a></li>
+      <li><a href="https://advocacy.consumerreports.org/press_release/more-than-430000-toddler-towers-recalled-in-under-a-year-consumer-reports-urges-completion-of-strong-safety-standard/">Consumer Reports, rappels et norme</a> · <a href="https://mother.ly/?p=260266">Motherly, tests Consumer Reports</a> · <a href="https://api.ai-analytics.org/product-recall-cpsc/10489">Rappel CPSC Little Partners</a></li>
+    </ol>
+  </footer>
+</div>
+
+<script>
+const IMGS = {"babybay": "data:image/webp;base64,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", "tissi": "data:image/webp;base64,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", "pinolino": "data:image/webp;base64,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", "ettetete": "data:image/webp;base64,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", "mamatoyz": "data:image/webp;base64,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", "piccalio": "data:image/webp;base64,UklGRrYEAABXRUJQVlA4WAoAAAAgAAAAlwAAvQAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggyAIAAJAZAJ0BKpgAvgA+wWCoTqelpCImNZm48BgJZ27hcpDv2n8nA248Hsm+AAj6D2TefMtmubGC+CaIU5bxs8BAnRMLiUdeXiP6NF9ZpbQwnNwdWULtvAUKA/BW2XVVO7sl3CLU0yKYltxVt1ujgvvcJfZSPa8kOoqqMx9YometBVy4iy+qpmkbLSH5aS0M6DpzNut8T7xRwZCQZys8c5nqkOtzf4vygWp57Mxf3PB8HFV9bPln/pxgoO7SxqhB2pDRs+91jqoY6GPoPVN18l4uN8ABLNiEAAD+/dWEVGA66CAXYkQAB3dLN5Cutg773Skm2puDmICqRZdc7AlHoCEKIT5BuXNEMrCMDs9YN1wKhP+ztYfhTbyfpk2CBtaz8DE3z95+n9QeKxwHMuh91Uc9KVclvosC8exQo/wHQ27U4ZWKDo4q03ZeEFDqDlTFlhQXCXcgV9q43X4NuqyMDKKUuZ+HLjAAPjzojL7rKM5h6gookqTN6HkXVNhJDuzRmC+hDGDpJy2FZ5QrHiXr8WESQtvTJqUBztSyAQG0x51Nl43iQwEIVKC5Ysu/3kTrvMPp1ZfWXcokLpkN5r1q88xEBbsZt75AJ+LtqWrHvv0wyGwHBU/prZTdtL9XuEaUK62sMBkywhuy9nJceJheoScgg8mjDSQFloh03XO+Ong0Nuimoz4MB081uYu8e1RL3qoOHBIIjVYpKONsxvMrY8f0xlnmw5/mojufc14lTGWwVsHSnnRQDh0JqU8huU5ESi8BltPsk/jj17OcN9sLX0CRyX+RgmgFi7oqV9q0BFsZuPjqfH9Y69FfvA1cHbsnNyHPl5biPAup30NBy+VfFMX9MmFVTtk7mWzGhfLDVssOKNZLzo2WPh738CqIuY3kZagObE1r9DUNaLSVmYn0ma+mRMEpVjwA5wiaMfAL4AQY7csrqEygAAAAAAA=", "fitwood": "data:image/webp;base64,UklGRpIDAABXRUJQVlA4WAoAAAAgAAAAlwAAvQAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggpAEAAPATAJ0BKpgAvgA+0WirUKgmo6Kl+LiBABoJaW7hcTDrwdEWVujXIaMBwKh/xpU9A8ZOw2Zsqh5Ykc3DJfuIQ0pqBECugO0F1XtgODk0u7y1SvItdKsKv454NC6L5KrkIq8oix6bpVulMlQLq30Icgc2DcADeJKGAc2pQOMIU5gtaEQnQUxIFQaYDtn0usyWH9nc3UBGc3eVukRX4+VyFFlbo1yFFlbEAAD+/TX0ByGxsDKqKk4UQDulACMoIe3pmR+mUcpfFN5J1+X0229RifCx+zB0EnHD7hkTDfF9jt5NfkTfELrgRu7wcA6thLOKMVUZwTcA6Alx9glTfaFRp873vEIF3qqN1RZIBEEizlerAwsOsgZTjO9UDdmw0cA+mSHBRaDGIMkAuTWdebbUJIJIDHx3E/TrcbhkjybG3v8UKj9Czss+/tB/kyGIn7aEogXaLsV/e6vH+Ojx11BHXhOm6RbXywzIAkb+0Z0Nox0oWGlxrUerHazeejmmKAEDh80GTSHw1k8vxg5TuinD/f3iejBm3BHKpQZ7iuI4QO6UAEAAAA==", "kaos": "data:image/webp;base64,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", "sprout": "data:image/webp;base64,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", "mobli": "data:image/webp;base64,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", "franklin": "data:image/webp;base64,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", "hemmingsen": "data:image/webp;base64,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", "katehaa": "data:image/webp;base64,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", "chambrekids": "data:image/webp;base64,UklGRvoEAABXRUJQVlA4WAoAAAAgAAAAqQAAgAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggDAMAANAYAJ0BKqoAgQA+0WSuUSglJKOh8rppABoJZ27dXzZUNlwWl4aynNVILDM+L5lkOZz6K/krhLB4R/jPD/m+D23L5P8FDUiXWb/1ofJyPfWONZh5ifV5c/Wfya9bXF/us51CM9sITVNagV3t07a4v+ph/5VfvauanH631ybNTYFUXn1/CFwnTXH24CIz6seLDZRw0tGrpz4KNKQdoHtYlT4WviqFgtQEHpOhTN5/zyC97mx45x282g2b5sUn3LhS5ikEsJNNcO1cKG2A1z5XgAD+9KACKJ1BthzVTviqgORHOnLrr8Vg1WDF3J0m8cKRemVV7o73YNaKHb33hMnpUFXpPE49A3Ip0H/owK3250jDjOpK5wFFbgZspqjlF3hER5XsC/z/cgvcj29MJe/sT9K1Muz7rQQsz6CvG8HewhEyWfoiIftifO4LI0rvR98wSjUS63Z36udTwEVn09/sPcXvo9GMYjmosmD8XLOwPwQ4a4kyEuIMBW2jhXRCYUjGW85W3wZocFl5ZInECexk7WR3QW+u99GSyxnelc1JpfuSmzenszQPRCYJyg6Mq1EufVZN8RIIJt2tAlAxIIpG7VLGhIUskUv7oiaTBKj+LwTtbtLenWNdK+56Aj0Isgqt3GGYXgWl4xCss03TrB/GaEuwL7BSHD+RRrlyNlgagWjARmHn1A7378SGB1ao/lTxdEd1nNnmuRTmDEj5ZokQ6E+wsTJOkYIlB/LWSFGwmZAQF/x3RTxVh2+/O23cmDfJTVBS8yqlz0Sj01d7kIAEaHBB+RW+oOwTA62lFTZJM0+gMSL6UNmldIAS4DzHzbvpz17RxB+xGIpTlTCosI1yP+qKWx3ZwT+MmSVIwWFxSQ/brLb9w9TxAVtxUrH6tZE7S55DYV3JQ+7WGRyOjCP7ZWXhJzC6qabjm9O8b/IK5eUkwcLYSx4ri+R9JRwh8gGW3jPQc/XYAt5bfp/94vLzPIw5WLzVhoYVZn2kzvPtPm4rSVzIgMB0cPWWyNpkNR+uy+QXgxrUnJAHGgAAAA==",
+  toucan:"data:image/webp;base64,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",
+  floki:"data:image/webp;base64,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",
+  marelou:"data:image/webp;base64,UklGRvwEAABXRUJQVlA4WAoAAAAgAAAAhwAAqQAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggDgMAALAcAJ0BKogAqgA+3WqvUCimJKapFbmREBuJZ27dXp/JdlQf9R/uapIldGtSI//N9XH7EAmduAACJcbueyb42IrUJ/LYVtoI22qpVAYHir6rfaWepTE2f2/8daT07uUIEDxx3VdpufpEtHaeMDMRvXZ9NhHjgEMaZSNFkMKc+VNyP2qSG2uLESjyNCeheovmSdalnjgS5jD+ntM93VT0EQ0j/FXgfpQ7It551N2xPrQMhsrHIccV1Z0oQB1GU58s987CxDlQTGJtfteDTIvlwPfGxl9cxmSmd38+Wo+x9Xu4CddPv0ZSa0bZ8vceXQAA/vNLl5mwsItANWOixy9Y8POmF+8H1c17gfTIxFncLzVnNs0pRJDOIzPqhSHLmL5TdAliRXPOJV+DZG7jlnloS184zCgGVBBz/7gbaipHxfWhs1VeO4hAytdCRUXKFicHfAcvMHv3NnCQM/mWtykp67GMlrbbFkAGXmj9bp+eKIOw2oMenfI+tdG+Xjfs5o9WIUVo7CJxoy2rWj3jOYbVoDsLIs4WNOq9CTpAF2l3FsBCDC56jUCmDiCy3NOKKiuVWqh2WWQ4Rmk7U8jgI0lcqCw42Gv90Nltg9SF5smL+b/9FkoaNxZ35SjgONR7tHKwKC+y7t6dnjsoIanVudG/qPcPFqzUBP499w0ulpGlqQzw5QkCO1muZb3Ed/8lsb82V4MqytAeJBkFGrS9jWIOiX5YV3ALubx82gU0LrhNRr3rJEAVQZS763i6h46jIJUFiXirteziybweIA2KnKafRA1jQN1Gk1eyDB/5M37Olww2VSkDDaApIxYWAM17nZhP43wXepFk6uo3IjQRDIYcPYOkB+CQOAZFu7jwaT+oQmCww+z0ob47WHOJuI8n+i3CTH7q9BO1cNhxWHYeHc+11EajtEgPVDWch4wJOcwIZ+lH9wyZIba0HonvBHg9JwHyJlokvLexCrQGQa2TQd80/yz5GwL37VA4xsFMq4uWijym8C194/deE4G+t5hyZjekji9CsW75RmAByVAAAAAA",
+  janod:"data:image/webp;base64,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"
+};
+
+
+const MODELS = [
+  { id:"tissi", name:"tiSsi Felix", brand:"tiSsi (Allemagne)", price:137, priceLabel:"~130 à 160 €",
+    dims:"89 x 40 x 40 cm (91 x 45 x 40 cm selon babyartikel)", weight:"~9 kg", origin:"Allemagne / UE (bois européen)", og:"eu",
+    material:"Hêtre massif laqué (versions chêne)",
+    safety:"Système anti-basculement, tour lourde", fold:false, foldLabel:"Non",
+    modular:"Plateforme et marche réglables (existe en version pour deux enfants)",
+    kind:"tour", wood:"hetre", sc:{s:8,q:9,d:8.5,a:8}, conf:"verif",
+    rev:{summary:"4,6/5 sur 260 avis (Amazon.de) · 4 % de notes à 1 ou 2 étoiles",
+         pros:"La synthèse Amazon des avis met en avant la stabilité, la finition et la sécurité ; la tour sert plusieurs années grâce aux réglages.",
+         cons:"Peu de critiques ; quelques avis isolés négatifs, sans défaut récurrent identifié."},
+    why:{s:"Tour lourde (9 kg) avec système anti-basculement ; base de 40 cm assez étroite. Les acheteurs la décrivent comme stable.",
+         q:"Hêtre massif, matériaux européens.",
+         d:"Bois massif, réglages multiples, peu de pièces d'usure.",
+         a:"Bonne note sur un volume important d'avis, sans défaut qui revient."},
+    warn:"", url:"https://www.amazon.de/dp/B08F6WJ79D" },
+
+  { id:"babybay", name:"babybay Littlefoot", brand:"Tobi (Allemagne)", price:129, priceLabel:"120 à 129 €",
+    dims:"92 x 62,6 x 42,5 cm", weight:"Non communiqué", origin:"Allemagne (Made in Germany)", og:"eu",
+    material:"Hêtre massif, finition laquée",
+    safety:"Plateforme réglable de 32,8 à 45,8 cm, charge 100 kg, certifiée ASTM (version américaine)",
+    fold:false, foldLabel:"Non", modular:"Accessoires : tableau, échelle et toboggan, roulettes",
+    kind:"tour", wood:"hetre", sc:{s:9,q:8,d:8.5,a:5.5}, conf:"verif",
+    rev:{summary:"4,4/5 sur seulement 34 avis (Amazon.de) · 16 % de notes à 2 étoiles",
+         pros:"Stabilité et finition souvent saluées.",
+         cons:"Jugée encombrante et « pas mieux qu'un modèle bon marché » par un acheteur ; un testeur signale des éclats de laque, une fissure sur une traverse et une pièce difficile à assembler. Plusieurs avis 5 étoiles très promotionnels ont été publiés le même jour."},
+    why:{s:"Base la plus large du comparatif (62,6 cm) et conformité ASTM ; aucun problème de stabilité relevé dans les avis.",
+         q:"Hêtre massif fabriqué en Allemagne, mais défauts de fabrication signalés par un testeur.",
+         d:"Bois massif, charge de 100 kg, pièces détachées d'origine proposées par le fabricant.",
+         a:"Peu d'avis, une part notable de 2 étoiles et des défauts signalés."},
+    warn:"Sur le site babybay, aucune note propre à ce produit : le 4,8/5 affiché est une moyenne de la marque (12 000 avis, tous produits). Le site américain affiche 5/5 sur 2 avis. Sur Amazon.de, le kit de roulettes vendu à part est noté 1/5.",
+    url:"https://babybay.de/fr/babybay-tour-d-apprentissage-littlefoot-laque-blanc" },
+
+  { id:"sprout", name:"Sprout Sous-Chef", brand:"Sprout Kids (États-Unis)", price:null, priceLabel:"190 $ (230 $ avec plaque intégrale)",
+    dims:"87,6 x 44,5 x 44,5 cm ; plateforme de 26,7 x 25,4 cm à 32, 39 ou 47 cm", weight:"Non communiqué (colis de 9 à 13,6 kg selon les indications de la fiche)", origin:"États-Unis (atelier de l'Utah, fabriquée à la commande)", og:"us",
+    material:"Bouleau à finition mélaminée (naturel ou blanc), barreau en érable ; certifié GREENGUARD Gold",
+    safety:"Côtés fermés, marches antidérapantes, barreau amovible, plaque de garde pour les enfants de moins de 81 cm, charge 68 kg ; test de la marque : basculement à 14° avec 23 kg suspendus sur un côté", fold:false, foldLabel:"Non",
+    modular:"3 hauteurs de plateforme", kind:"tour", wood:"bouleau", sc:{s:7,q:8,d:7.5,a:8}, conf:"verif",
+    rev:{summary:"4,83/5 sur 207 avis (site Sprout) · recommandée dans un fil r/daddit",
+         pros:"Montage sans outil, design, solidité dans la durée selon une cliente qui en utilise trois.",
+         cons:"Avis hébergés par la marque elle-même ; Sprout rappelle de surveiller l'escalade par les côtés et le balancement."},
+    why:{s:"Base de 44,5 cm de côté, pieds évasés et plaque de garde adaptée aux plus petits. Le test de basculement est publié par la marque, sans laboratoire tiers ; poids net inconnu.",
+         q:"Fabriquée aux États-Unis en bouleau, certification GREENGUARD Gold sur les émissions chimiques.",
+         d:"Réglage sur trois hauteurs, de 71 cm à 112 cm de taille d'enfant selon le tableau de la marque.",
+         a:"Très bonne note, mais uniquement sur le site de la marque."},
+    warn:"Expédiée depuis l'Utah : le port international, les droits de douane et la TVA sont à la charge de l'acheteur, ce qui devrait la placer nettement au-dessus de 200 €.", url:"https://sprout-kids.com/products/sous-chef-toddler-tower" },
+
+  { id:"ettetete", name:"Ette Tete Step'n'Sit", brand:"Ette Tete (Lettonie)", price:150, priceLabel:"~139 à 151 €",
+    dims:"90 x 40 x 40 cm, plateforme à 45 cm", weight:"6,9 kg", origin:"Lettonie (UE)", og:"eu",
+    material:"Contreplaqué de bouleau 15 mm certifié FSC",
+    safety:"Fermoirs métalliques en mode tour, normes EN 71-1, 71-2 et 71-3, dès 18 mois", fold:false, foldLabel:"Non",
+    modular:"Se transforme en petit bureau avec assise", kind:"convertible", wood:"noir", sc:{s:6.5,q:7.5,d:7.5,a:7}, conf:"verif",
+    rev:{summary:"4,4/5 sur 282 avis (Amazon.de) · 10 % de notes à 1 ou 2 étoiles",
+         pros:"Montage rapide, notice claire, stabilité et double usage appréciés.",
+         cons:"Avis partagés sur l'usage réel par l'enfant ; une part non négligeable de notes basses."},
+    why:{s:"Tour légère (6,9 kg) sur base de 40 x 40 cm ; la conversion ajoute un verrouillage à contrôler.",
+         q:"Fabriquée en Lettonie, contreplaqué de bouleau FSC.",
+         d:"Deux usages qui prolongent la durée de vie au-delà de l'âge de la tour.",
+         a:"Note correcte sur un volume important d'avis."},
+    warn:"", url:"https://www.amazon.de/dp/B08F7DV147" },
+
+  { id:"piccalio", name:"Piccalio Foldable", brand:"Piccalio (Los Angeles)", price:227, priceLabel:"226,80 €, livraison offerte (site Piccalio)",
+    dims:"91 x 46 x 46 cm ; 16 cm d'épaisseur plié ; plateforme à 32, 38 ou 45 cm", weight:"6,8 kg", origin:"Non précisé (la marque parle seulement de « fabrication éthique »)", og:"other",
+    material:"Contreplaqué de bouleau FSC et pin de Nouvelle-Zélande, finition sans COV ; certifié GREENGUARD Gold",
+    safety:"Charge 80 kg, de 18 mois à 6 ans ; conforme ASTM F963 et CPSC, certifiée Intertek ; patins stabilisateurs et filet de sécurité vendus en option", fold:true, foldLabel:"Oui (16 cm plié)",
+    modular:"Non", kind:"pliante", wood:"bouleau", sc:{s:6,q:7.5,d:6.5,a:8.5}, conf:"verif",
+    rev:{summary:"4,9/5 sur 945 avis (site Piccalio : 887 à 5 étoiles, 7 à 1 ou 2 étoiles) · note équivalente sur Babylist",
+         pros:"Facilité de pliage, rangement, finition et esthétique très appréciés.",
+         cons:"Une partie des avis a été collectée lors d'une promotion ; la marque consacre une page d'aide à la tour « qui bouge » et vend des patins pour l'empêcher de glisser."},
+    why:{s:"Légère (6,8 kg) et pliante. La marque dit avoir fait tester la stabilité et le basculement, mais ASTM F963 reste une norme jouets, faute de norme propre aux tours.",
+         q:"Matériaux et finition bien documentés, garantie de 3 ans.",
+         d:"Le pin est plus tendre que le hêtre, et il y a des charnières de pliage.",
+         a:"Excellente note, nuancée par les avis collectés en promotion et les signaux de stabilité."},
+    warn:"La Marelou La Vigie semble être la même tour, vendue environ 50 € plus cher.", url:"https://piccalio.com/products/foldable-toddler-tower" },
+
+  { id:"pinolino", name:"Pinolino Fino", brand:"Pinolino (marque allemande)", price:90, priceLabel:"68 à 127 € selon revendeur",
+    dims:"85 x 44 x 40 cm (85 x 54 x 44 cm selon une autre fiche)", weight:"Non communiqué", origin:"Marque allemande, « Made in Europe » selon un revendeur", og:"other",
+    material:"Hêtre massif, laqué ou naturel",
+    safety:"Barrière arrière démontable, charge 60 kg (30 kg selon une fiche)", fold:false, foldLabel:"Non",
+    modular:"Devient un escabeau", kind:"tour", wood:"blanc", sc:{s:6.5,q:7,d:8,a:6.5}, conf:"verif",
+    rev:{summary:"4,5/5 sur 250 avis (Amazon.de) · 6 % de notes à 1 étoile",
+         pros:"Qualité perçue et rapport qualité-prix appréciés ; meilleure vente de la catégorie chez Galaxus.",
+         cons:"Selon la synthèse Amazon, des acheteurs signalent des vis qui cassent, du bois qui s'écaille et une stabilité jugée inégale."},
+    why:{s:"Base dans la moyenne et avis partagés sur la stabilité.",
+         q:"Hêtre massif, mais défauts de vis et d'éclats signalés.",
+         d:"Seconde vie en escabeau et garantie de 10 ans après enregistrement du produit.",
+         a:"Bonne note sur un gros volume, mais défauts qui reviennent."},
+    warn:"Les fiches revendeurs divergent sur les dimensions et la charge maximale : à vérifier à l'achat.", url:"https://www.amazon.de/dp/B08TDBDRZ6" },
+
+  { id:"mobli", name:"Moblì Ully", brand:"Moblì (vendue par la marque sur Amazon.fr)", price:90, priceLabel:"89,99 € (Amazon.fr)",
+    dims:"86 x 40,5 x 38,5 cm ; plateforme à 40 cm au plus (3 positions)", weight:"8,5 kg", origin:"Contradictoire : « 100 % made in Italy » (Toscane) dans la description, « Chine » dans la fiche technique Amazon", og:"other",
+    material:"Bois naturel sans peinture ni solvant (essence non précisée ; contreplaqué multiplis selon Klarstein)",
+    safety:"Charge de 150 kg annoncée, patins antidérapants, côtés pleins, arêtes arrondies", fold:false, foldLabel:"Non",
+    modular:"Plateforme amovible sur 3 hauteurs", kind:"tour", wood:"bouleau", sc:{s:6.5,q:7,d:7,a:9}, conf:"partielle",
+    rev:{summary:"4,8/5 sur 3 191 avis (Amazon.fr, tous pays) · 1 % de notes à 1 ou 2 étoiles",
+         pros:"Qualité du bois et finition, montage rapide avec une seule taille de vis, stabilité ; un acheteur la juge intacte après 2 ans d'usage.",
+         cons:"Finition brute salissante selon une acheteuse ; les avis regroupent les coloris naturel et laqué blanc."},
+    why:{s:"Assez lourde (8,5 kg) et fermée sur les côtés, mais base plutôt étroite (40,5 x 38,5 cm) et plateforme limitée à 40 cm.",
+         q:"Bois brut bien fini selon les avis, mais pays de fabrication contradictoire et essence non précisée.",
+         d:"Structure simple, sans mécanisme mobile.",
+         a:"Excellente note sur le plus gros volume d'avis du comparatif, avec très peu de notes basses."},
+    warn:"Votre tableau mentionnait l'Ulisse ; le lien fourni correspond à l'Ully, qui remplace donc l'Ulisse ici. Origine à faire confirmer par le vendeur : le titre annonce l'Italie, la fiche technique la Chine.", url:"https://www.amazon.fr/dp/B07RKS6BH3" },
+
+  { id:"mamatoyz", name:"Mamatoyz Kule Bend", brand:"Mamatoyz (Buba Tasarım, Istanbul)", price:null, priceLabel:"Prix non trouvé (aucun revendeur identifié)",
+    dims:"36 x 83 x 53 cm selon la marque (83 cm de haut)", weight:"4,05 kg", origin:"Marque turque, usine non précisée (« produits en Europe » ou « Turquie » selon les fiches Galaxus d'autres modèles)", og:"other",
+    material:"Bois, essence non précisée (contreplaqué de bouleau ou MDF sur les autres tours Kule)",
+    safety:"Dès 24 mois selon la marque, enfant de 30 kg au plus", fold:false, foldLabel:"Non (se couche pour devenir table)",
+    modular:"Se transforme en table ou en surface de jeu", kind:"convertible", wood:"bouleau", sc:{s:4.5,q:6,d:6,a:null}, conf:"partielle",
+    rev:{summary:"Aucun avis trouvé",
+         pros:"Aucun retour d'acheteur trouvé.",
+         cons:"Modèle récent : ni avis clients, ni test indépendant."},
+    why:{s:"Très légère (4,05 kg), charge limitée à 30 kg et pénalité de conversion ; la marque la réserve aux enfants de 2 ans et plus.",
+         q:"Matériau non précisé sur la fiche.",
+         d:"Seconde vie en table, mais charge maximale basse.",
+         a:"Pas d'avis exploitables."},
+    warn:"La marque la conseille à partir de 24 mois : elle ne convient pas encore à votre fille. Les avis Amazon.de (4,3/5 sur 92) repris auparavant portaient sur un autre modèle, la Mamatoyz Fold pliante.", url:"https://mamatoyz.com/kule-bend-learning-tower/" },
+
+  { id:"kaos", name:"Kaos Klapp", brand:"Kaos (design norvégien)", price:249, priceLabel:"~249 € + arceau", out:true,
+    dims:"96 x 45 x 60 cm", weight:"5 kg", origin:"Europe", og:"eu",
+    material:"Bois certifié FSC ou plastique recyclé selon la version",
+    safety:"Chaise haute conforme à la norme EN 14988, charge 110 kg, arceau en option jusqu'à 3 ans", fold:true, foldLabel:"Oui (13 cm d'épaisseur)",
+    modular:"Chaise haute évolutive", kind:"chaise", wood:"noir", sc:{s:5,q:7.5,d:8,a:7}, conf:"partielle",
+    rev:{summary:"4,5/5 dans le test de Mother&Baby (2 mois d'usage) · avis Trustpilot partagés",
+         pros:"Qualité, solidité et pliage salués, y compris par des parents qui en ont racheté une seconde.",
+         cons:"Le harnais junior est jugé peu pratique, voire peu sûr, par une cliente."},
+    why:{s:"Chaise haute sans enceinte sur quatre côtés : la note n'est pas comparable à celle d'une tour.",
+         q:"Design primé, versions bois FSC ou plastique recyclé.",
+         d:"Conçue pour toute l'enfance.",
+         a:"Bons retours de la presse, critiques ciblées sur le harnais."},
+    warn:"Hors catégorie : c'est une chaise haute, pas une tour d'observation.", url:"https://www.johnlewis.com/kaos-klapp-highchair/black/p113351176" },
+
+  { id:"fitwood", name:"FitWood Verso", brand:"FitWood (Finlande)", price:399, priceLabel:"399 € (vue à 319 € en promotion)",
+    dims:"85 x 46 x 42 cm", weight:"13 kg", origin:"Conçue en Finlande, usine non précisée", og:"other",
+    material:"Contreplaqué de bouleau",
+    safety:"Marquage CE et EN 71, dès 1 an, charge 30 kg, un seul enfant à la fois", fold:false, foldLabel:"Non",
+    modular:"Table basse, brouette sur roulettes", kind:"convertible", wood:"bouleau", sc:{s:7.5,q:8,d:7,a:7}, conf:"verif",
+    rev:{summary:"5/5 sur 6 avis (site FitWood)",
+         pros:"Avis unanimement positifs.",
+         cons:"Trop peu d'avis pour conclure, tous publiés sur le site de la marque."},
+    why:{s:"Tour la plus lourde du comparatif (13 kg) sur une base de 46 x 42 cm ; roulettes à vérifier en mode tour.",
+         q:"Marque haut de gamme spécialisée dans le mobilier en bois.",
+         d:"Plusieurs usages, mais charge maximale de 30 kg seulement.",
+         a:"Note parfaite mais plafonnée faute de volume."},
+    warn:"Remplace la ligne « FitWood Kumpu » de votre tableau : le Kumpu est une bibliothèque.", url:"https://fitwood.com/fr/products/verso-tour-d-apprentissage-bouleau" },
+
+  { id:"hemmingsen", name:"Hemmingsen Kids Susanne", brand:"Hemmingsen Kids (Danemark)", price:107, priceLabel:"~107 € (799 DKK) · ~188 € en chêne",
+    dims:"97 x 44 x 46 cm (22 cm d'épaisseur plié)", weight:"Non communiqué", origin:"Entreprise danoise, usine non précisée", og:"other",
+    material:"Contreplaqué de bouleau FSC de 18 mm, verni (version chêne disponible)",
+    safety:"Charge 80 kg, filet de sécurité vendu en option", fold:true, foldLabel:"Oui (22 cm d'épaisseur plié)",
+    modular:"Plateforme à 29, 37 ou 44 cm", kind:"pliante", wood:"bouleau", sc:{s:6.5,q:7.5,d:7,a:5}, conf:"verif",
+    rev:{summary:"4,4/5 sur 25 avis (site Hemmingsen Kids)",
+         pros:"",
+         cons:"Peu d'avis, publiés uniquement sur le site de la marque ; détail des avis non consulté."},
+    why:{s:"Base correcte (44 x 46 cm) et contreplaqué épais, mais modèle pliant ; poids non communiqué.",
+         q:"Contreplaqué de bouleau FSC de 18 mm, plus épais que la moyenne.",
+         d:"Charge de 80 kg, mais charnières de pliage.",
+         a:"Note correcte mais faible volume, sur le site de la marque."},
+    warn:"Remplace la ligne « Milo » de votre tableau : le lien transmis correspond au modèle Susanne, pliable. Prix en euros calculés au taux approximatif de 7,46 DKK pour 1 €.", url:"https://hemmingsenkids.dk/products/susanne-l-ringst-rn-sammenklappelig" },
+
+  { id:"katehaa", name:"KateHaa Pliable", brand:"KateHaa (Lettonie)", price:139, priceLabel:"139 €",
+    dims:"90 x 47 x 46 cm", weight:"7 kg (votre relevé)", origin:"Marque lettone, usine non précisée (bois européen)", og:"eu",
+    material:"Contreplaqué de bouleau de la Baltique certifié FSC, vernis conforme EN 71-3",
+    safety:"Charge 50 kg, un seul enfant, conseillée à partir de 36 mois", fold:true, foldLabel:"Oui",
+    modular:"2 hauteurs ; position assise ou debout", kind:"pliante", wood:"bouleau", sc:{s:5.5,q:7.5,d:6.5,a:null}, conf:"verif",
+    rev:{summary:"5/5 sur 1 seul avis (site KateHaa)", pros:"", cons:"Un seul avis : pas exploitable."},
+    why:{s:"Modèle pliant, et le fabricant le réserve aux enfants de 3 ans et plus.",
+         q:"Contreplaqué de bouleau FSC, sans plastique, vernis aux normes jouets.",
+         d:"Charge limitée à 50 kg et charnières de pliage.",
+         a:"Un seul avis."},
+    warn:"Le fabricant la conseille à partir de 36 mois : pas adaptée à 18 mois.", url:"https://www.katehaa.com/en-eu/products/learning-kitchen-tower-foldable-natural" },
+
+  { id:"franklin", name:"Franklin+Emily Toddler Tower", brand:"Franklin+Emily (États-Unis)", price:null, priceLabel:"199 $ (en rupture de stock)",
+    dims:"85 x 44 x 41 cm", weight:"6,8 kg", origin:"Conçue aux États-Unis, fabriquée à l'étranger", og:"other",
+    material:"Contreplaqué de bouleau de la Baltique (certifié CARB2), finitions non toxiques",
+    safety:"Sangle de sécurité en cuir, patins en feutre antidérapants, conseillée de 2 à 6 ans", fold:false, foldLabel:"Non",
+    modular:"3 hauteurs de plateforme (30, 38 et 46 cm)", kind:"tour", wood:"bouleau", sc:{s:5.5,q:7.5,d:7,a:8.5}, conf:"verif",
+    rev:{summary:"4,95/5 sur 79 avis (site Franklin+Emily)", pros:"Note quasi parfaite.", cons:"Avis publiés sur le site de la marque ; détail non consulté."},
+    why:{s:"Tour légère (6,8 kg) fermée à l'arrière par une sangle ; le fabricant la réserve aux 2 à 6 ans.",
+         q:"Bouleau de la Baltique, fixations dissimulées.",
+         d:"Sangles de rechange vendues par la marque.",
+         a:"Excellente note, mais uniquement sur le site de la marque."},
+    warn:"En rupture de stock. Conseillée à partir de 2 ans : pas adaptée à 18 mois selon le fabricant. Fabriquée hors des États-Unis.", url:"https://franklinemily.com/products/toddler-tower" },
+
+  { id:"chambrekids", name:"Chambrekids Tour Montessori", brand:"Chambrekids (France)", price:153, priceLabel:"219 € (153,30 € en promotion jusqu'au 17 novembre)",
+    dims:"92 x 43 x 45 cm (35 cm de profondeur en haut)", weight:"12 à 16 kg emballage compris (poids seul non précisé)", origin:"France (usine près de La Rochelle)", og:"fr",
+    material:"Bouleau et panneaux de bois recomposés à faible taux de formaldéhyde, vernis à l'eau sans COV",
+    safety:"Dès 18 mois, 3 hauteurs de marche (32,5, 39 et 45,5 cm)", fold:false, foldLabel:"Non",
+    modular:"3 hauteurs de marche", kind:"tour", wood:"blanc", sc:{s:6.5,q:6.5,d:7.5,a:null}, conf:"verif",
+    rev:{summary:"Aucun avis sur le site ; quelques avis sur ConsoBaby", pros:"Appréciée pour être à hauteur de l'îlot.", cons:"L'enfant grimpe par les côtés ; prix jugé excessif."},
+    why:{s:"Base qui s'élargit vers le bas (45 cm) et tour apparemment lourde, mais escalade par les côtés signalée.",
+         q:"Panneaux de bois recomposés plutôt que bois massif.",
+         d:"Fabricant français qui garantit la disponibilité des pièces détachées, garantie de 2 ans.",
+         a:"Trop peu d'avis pour une note."},
+    warn:"", url:"https://www.chambrekids.com/fr/mobilier-montessori/212649-tour-observation-montessori.html" },
+
+  { id:"toucan", name:"Maxi-Cosi Toucan 3-en-1", brand:"Maxi-Cosi (groupe Dorel)", price:140, priceLabel:"139,99 € (site Maxi-Cosi)",
+    dims:"Non trouvé sur la fiche", weight:"8,7 kg", origin:"Non précisé", og:"other",
+    material:"Bouleau certifié FSC, tableau noir intégré",
+    safety:"3 hauteurs de plateforme, dès 18 mois et 75 cm de taille, enfant jusqu'à 30 kg ; testée par un laboratoire indépendant selon la marque, qui précise qu'aucune norme ne vise les tours", fold:false, foldLabel:"Non",
+    modular:"Tour, ensemble table et chaise, marchepied", kind:"convertible", wood:"bouleau", sc:{s:6.5,q:8,d:8,a:8}, conf:"partielle",
+    rev:{summary:"4,8/5 sur 99 avis (site Maxi-Cosi) · aucune note sous 4 étoiles",
+         pros:"Stabilité, finition et montage simple reviennent le plus souvent.",
+         cons:"Un acheteur la trouve lourde à déplacer. Tous les avis viennent du site de la marque."},
+    why:{s:"Lourde (8,7 kg), donc plutôt stable, et testée en laboratoire ; pénalité habituelle pour la conversion en table, qui multiplie les pièces mobiles.",
+         q:"Bouleau FSC et garantie portée à 5 ans après enregistrement en ligne.",
+         d:"Trois usages successifs et garantie longue : la meilleure seconde vie parmi les convertibles.",
+         a:"Très bonne note sur un volume correct, avec un point retiré car les avis ne sont publiés que par la marque."},
+    warn:"Dimensions et pays de fabrication absents de la fiche.", url:"https://www.maxi-cosi.fr/a-la-maison/toucan" },
+
+  { id:"floki", name:"Loove Floki 2-en-1", brand:"Loove (monloove.com)", price:165, priceLabel:"160 à 165 € selon finition (180 € barré)",
+    dims:"88 cm de haut, base 40 x 37,5 cm, plateforme 37,5 x 28 cm à 45,5 cm", weight:"7 kg", origin:"Lettonie (UE)", og:"eu",
+    material:"Contreplaqué de bouleau FSC",
+    safety:"Norme jouets EN 71, loquets et charnières de conversion ; première marche à 25,5 cm", fold:false, foldLabel:"Non",
+    modular:"Devient un bureau avec assise, sans outil ; toboggan et marchepied en option", kind:"convertible", wood:"bouleau", sc:{s:5.5,q:7.5,d:7.5,a:4.5}, conf:"verif",
+    rev:{summary:"4,3/5 sur 6 à 7 avis (site Loove, collectés sur invitation)",
+         pros:"Solide et pratique selon les acheteurs ; une pièce défectueuse a été remplacée rapidement.",
+         cons:"Une erreur de fabrication signalée et un prix jugé élevé ; trop peu d'avis pour conclure."},
+    why:{s:"Base étroite (40 x 37,5 cm) et poids moyen, plus la pénalité de conversion. La norme EN 71 vise les jouets, pas la stabilité d'une tour.",
+         q:"Bouleau FSC fabriqué en Lettonie, finition bien documentée.",
+         d:"La conversion en bureau prolonge l'usage au-delà de l'âge de la tour.",
+         a:"Note moyenne, très peu d'avis, tous sur le site de la marque."},
+    warn:"Base la plus étroite du comparatif.", url:"https://monloove.com/products/tour-apprentissage-evolutive-floki" },
+
+  { id:"janod", name:"Janod Tour d'observation", brand:"Janod (marque française, groupe Juratoys)", price:130, priceLabel:"129,99 € (site Janod)",
+    dims:"50 x 43 x 85 cm", weight:"Non communiqué", origin:"Non précisé (marque française)", og:"other",
+    material:"Bois (essence et certification non précisées), tableau à craie",
+    safety:"2 hauteurs de plateforme (32,5 et 40,5 cm), marche amovible servant de tabouret", fold:false, foldLabel:"Non",
+    modular:"La marche devient un tabouret", kind:"tour", wood:"blanc", sc:{s:5.5,q:6,d:5,a:4}, conf:"partielle",
+    rev:{summary:"4,3/5 sur 7 avis vérifiés (site Janod)",
+         pros:"« Très bonne qualité », aspect ludique du tableau.",
+         cons:"Des marches qui se détachent trop facilement, un colis arrivé abîmé, un prix jugé élevé pour les matériaux."},
+    why:{s:"Base correcte, mais plateforme basse et marches amovibles signalées comme se détachant facilement.",
+         q:"Matériaux peu documentés ; un acheteur les juge en deçà du prix.",
+         d:"Prévue de 18 à 36 mois seulement : l'usage le plus court du comparatif.",
+         a:"Très peu d'avis, tous chez la marque, avec un défaut de structure qui revient."},
+    warn:"Limite d'âge fixée à 3 ans par le fabricant.", url:"https://www.janod.com/fr/1460-tour-d-observation.html" },
+
+  { id:"marelou", name:"Marelou La Vigie", brand:"Marelou (marque française)", price:279, priceLabel:"279 € (289 € en noyer ou rouge) ; 223 € en promotion",
+    dims:"91 x 46 x 46 cm ; 16 cm d'épaisseur plié", weight:"6,8 kg", origin:"Non précisé", og:"other",
+    material:"Contreplaqué de bouleau et pin, 7 finitions",
+    safety:"Charge 80 kg, garde-corps sur les quatre côtés, plateforme à 32, 38 ou 45 cm", fold:true, foldLabel:"Oui (16 cm plié)",
+    modular:"Non", kind:"pliante", wood:"bouleau", sc:{s:6,q:7.5,d:6.5,a:null}, conf:"partielle",
+    rev:{summary:"Affiche 4,9/5 sur 942 avis, mais le lien « avis d'origine » renvoie vers la fiche Piccalio",
+         pros:"Mêmes atouts que la Piccalio : pliage, rangement, finition.",
+         cons:"Les avis affichés ne portent pas sur un produit vendu par Marelou ; aucun avis propre exploitable."},
+    why:{s:"Notée comme la Piccalio, dont elle reprend les caractéristiques.",
+         q:"Mêmes matériaux que la Piccalio.",
+         d:"Pin plus tendre et charnières de pliage, comme la Piccalio.",
+         a:"Critère ignoré : les avis affichés sont ceux de la Piccalio."},
+    warn:"Dimensions, poids, charge et accessoires identiques à la Piccalio Foldable : il s'agit très probablement de la même tour revendue sous une autre marque (hypothèse), environ 50 € plus chère.", url:"https://marelou.fr/products/tour-observation-pliable-la-vigie" }
+];
+
+
+
+const PHOTO_SRC = { babybay:"Amazon.de", tissi:"Amazon.de", pinolino:"Amazon.de", ettetete:"Amazon.de", mamatoyz:"Mamatoyz", piccalio:"Piccalio", fitwood:"FitWood", kaos:"Mori", sprout:"Sprout", mobli:"Chal-Tec", franklin:"Franklin+Emily", katehaa:"KateHaa", hemmingsen:"Hemmingsen", chambrekids:"Chambrekids", toucan:"Maxi-Cosi", floki:"Loove", janod:"Janod", marelou:"Marelou" };
+const ORIGIN_LABEL = { fr:"France", eu:"Europe", us:"États-Unis", other:"Origine non confirmée" };
+const CONF = { verif:["Données vérifiées","ok"], partielle:["Données partielles","warn"], releve:["Votre relevé","bad"] };
+const WOOD = { hetre:["#d6ad7c","#a87b4c"], bouleau:["#e8d2a8","#b89a68"], blanc:["#f1f0ea","#b9b7ad"], noir:["#3d3d3d","#1f1f1f"] };
+const DEFAULTS = () => ({ w:{s:3,q:2,d:2,a:2}, origin:"all", fold:"any", budget:400, unk:true, chair:false, unver:false, noavis:false, view:"cards", sortKey:"g", sortDir:-1 });
+let state = DEFAULTS();
+
+function g(m){
+  let num = 0, den = 0;
+  for (const k of ["s","q","d","a"]) { const v = m.sc[k]; if (v == null) continue; num += v * state.w[k]; den += state.w[k]; }
+  return den ? num / den : 0;
+}
+function col(v){ return v >= 8 ? "var(--good)" : v >= 6.5 ? "var(--mid)" : "var(--low)"; }
+function fmt(v){ return v == null ? "n.d." : v.toFixed(1).replace(".", ","); }
+
+function visible(){
+  return MODELS.filter(m => {
+    if (m.out && !state.chair) return false;
+    if (state.unver && m.conf === "releve") return false;
+    if (state.noavis && m.sc.a == null) return false;
+    if (state.origin === "fr" && m.og !== "fr") return false;
+    if (state.origin === "eu" && !(m.og === "eu" || m.og === "fr")) return false;
+    if (state.origin === "us" && m.og !== "us") return false;
+    if (state.origin === "other" && m.og !== "other") return false;
+    if (state.fold === "yes" && m.fold !== true) return false;
+    if (state.fold === "no" && m.fold !== false) return false;
+    if (m.price == null) { if (!state.unk) return false; }
+    else if (m.price > state.budget) return false;
+    return true;
+  });
+}
+function sorted(list){
+  const key = state.sortKey, dir = state.sortDir;
+  const val = m => key === "g" ? g(m) : key === "name" ? m.name : key === "price" ? (m.price ?? 9999) : (m.sc[key] ?? -1);
+  return [...list].sort((a,b) => { const x = val(a), y = val(b); return (x > y ? 1 : x < y ? -1 : 0) * dir; });
+}
+
+function svg(m){
+  const [f, s] = WOOD[m.wood] || WOOD.bouleau;
+  const st = `fill="${f}" stroke="${s}" stroke-width="2" stroke-linejoin="round"`;
+  if (m.kind === "pliante") return `<svg viewBox="0 0 120 140" aria-hidden="true"><polygon points="28,12 40,12 52,130 38,130" ${st}/><polygon points="80,12 92,12 84,130 70,130" ${st}/><rect x="30" y="12" width="60" height="7" rx="3" ${st}/><rect x="34" y="34" width="54" height="6" rx="3" ${st}/><rect x="40" y="74" width="44" height="8" rx="2" ${st}/><rect x="44" y="104" width="34" height="6" rx="2" ${st}/></svg>`;
+  if (m.kind === "chaise") return `<svg viewBox="0 0 120 140" aria-hidden="true"><path d="M30 130 L52 20 L64 20 L44 130 Z" ${st}/><path d="M58 130 L90 40 L100 44 L70 130 Z" ${st}/><rect x="44" y="58" width="44" height="7" rx="3" ${st}/><rect x="40" y="86" width="40" height="6" rx="3" ${st}/><rect x="36" y="110" width="36" height="6" rx="3" ${st}/></svg>`;
+  const c = m.kind === "convertible";
+  const desk = c ? `<rect x="80" y="104" width="34" height="5" rx="2" ${st}/><rect x="84" y="109" width="4" height="20" ${st}/><rect x="106" y="109" width="4" height="20" ${st}/>` : "";
+  return `<svg viewBox="0 0 120 140" aria-hidden="true"><rect x="14" y="10" width="9" height="122" rx="3" ${st}/><rect x="${c ? 66 : 97}" y="10" width="9" height="122" rx="3" ${st}/><rect x="14" y="10" width="${c ? 61 : 92}" height="8" rx="3" ${st}/><rect x="14" y="36" width="${c ? 61 : 92}" height="6" rx="3" ${st}/><rect x="16" y="72" width="${c ? 57 : 88}" height="9" rx="2" ${st}/><rect x="16" y="104" width="${c ? 57 : 88}" height="7" rx="2" ${st}/>${desk}</svg>`;
+}
+function visual(m, cap){
+  const src = IMGS[m.id];
+  if (src) return `<div class="illu"><img src="${src}" alt="Photo du modèle ${m.name}" loading="lazy">${cap ? `<span class="cap">${PHOTO_SRC[m.id] || ""}</span>` : ""}</div>`;
+  return `<div class="illu schema">${svg(m)}${cap ? `<span class="cap">Schéma</span>` : ""}</div>`;
+}
+function ss(label, v){
+  return `<div class="ss"><div class="top"><span>${label}</span><b style="color:${v == null ? "var(--faint)" : col(v)}">${fmt(v)}</b></div><div class="track"><div class="fill" style="width:${v == null ? 0 : v*10}%;background:${v == null ? "transparent" : col(v)}"></div></div></div>`;
+}
+
+function card(m, rank){
+  const c = CONF[m.conf];
+  const gv = g(m);
+  const pills = [
+    `<span class="pill">${ORIGIN_LABEL[m.og]}</span>`,
+    m.fold === true ? `<span class="pill">Pliable</span>` : "",
+    m.kind === "convertible" ? `<span class="pill">Convertible</span>` : "",
+    m.out ? `<span class="pill bad">Hors catégorie</span>` : "",
+    `<span class="pill ${c[1]}">${c[0]}</span>`
+  ].join("");
+  return `<article class="card${m.out ? " out" : ""}">
+    <div class="c-head">
+      ${visual(m, true)}
+      <div class="c-id">
+        <h3>${m.name}</h3>
+        <div class="brand">${m.brand}</div>
+        <div class="price">${m.priceLabel}</div>
+      </div>
+      <div class="score" title="Note globale pondérée par vos priorités">
+        ${m.out ? "" : `<span class="rk">N° ${rank}</span>`}
+        <span class="val" style="color:${col(gv)}">${fmt(gv)}</span>
+        <span class="lbl">sur 10</span>
+      </div>
+    </div>
+    <div class="pills">${pills}</div>
+    <div class="subscores">
+      ${ss("Sécurité", m.sc.s)}${ss("Qualité", m.sc.q)}${ss("Durabilité", m.sc.d)}${ss("Avis clients", m.sc.a)}
+    </div>
+    <div class="facts">
+      <div><span>Dimensions</span>${m.dims}</div>
+      <div><span>Poids</span>${m.weight}</div>
+      <div><span>Fabrication</span>${m.origin}</div>
+      <div><span>Pliable</span>${m.foldLabel}</div>
+    </div>
+    <div class="reviewline"><span class="k">Avis</span><span>${m.rev.summary}</span></div>
+    ${m.warn ? `<p class="alert">${m.warn}</p>` : ""}
+    <details class="more">
+      <summary>Détails, avis et justification des notes</summary>
+      <div class="more-body">
+        <div><h4>Caractéristiques</h4><dl>
+          <dt>Matériau</dt><dd>${m.material}</dd>
+          <dt>Sécurité</dt><dd>${m.safety}</dd>
+          <dt>Modularité</dt><dd>${m.modular}</dd>
+        </dl></div>
+        ${(m.rev.pros || m.rev.cons) ? `<div><h4>Ce que disent les acheteurs</h4>
+          ${m.rev.pros ? `<p><span class="tag ok">Points forts</span>${m.rev.pros}</p>` : ""}
+          ${m.rev.cons ? `<p><span class="tag bad">Critiques</span>${m.rev.cons}</p>` : ""}</div>` : ""}
+        <div><h4>Pourquoi ces notes</h4><ul>
+          <li><strong>Sécurité ${fmt(m.sc.s)}</strong> : ${m.why.s}</li>
+          <li><strong>Qualité ${fmt(m.sc.q)}</strong> : ${m.why.q}</li>
+          <li><strong>Durabilité ${fmt(m.sc.d)}</strong> : ${m.why.d}</li>
+          <li><strong>Avis ${fmt(m.sc.a)}</strong> : ${m.why.a}</li>
+        </ul></div>
+        ${m.url ? `<a class="link" href="${m.url}" target="_blank" rel="noopener">Voir la fiche produit</a>` : ""}
+      </div>
+    </details>
+  </article>`;
+}
+
+function rankMap(list){
+  const r = {}; [...list].filter(m => !m.out).sort((a,b) => g(b) - g(a)).forEach((m,i) => r[m.id] = i + 1); return r;
+}
+function renderPodium(list){
+  const top = list.filter(m => !m.out).sort((a,b) => g(b) - g(a)).slice(0,3);
+  const el = document.getElementById("podium");
+  if (!top.length) { el.innerHTML = `<div class="empty">Aucun modèle ne correspond à ces filtres.</div>`; return; }
+  el.innerHTML = top.map((m,i) => `<div class="pod${i===0 ? " first" : ""}">
+      ${visual(m, false)}
+      <div><div class="rank">${["1er","2e","3e"][i]}</div><div class="nm">${m.name}</div><div class="sub">${m.priceLabel}</div><div class="sub">${ORIGIN_LABEL[m.og]}</div></div>
+      <div class="big num" style="color:${col(g(m))}">${fmt(g(m))}<small>sur 10</small></div>
+    </div>`).join("");
+}
+function renderCards(list){
+  const ranks = rankMap(list);
+  const el = document.getElementById("cards");
+  const s = sorted(list);
+  el.innerHTML = s.length ? s.map(m => card(m, ranks[m.id])).join("") : `<div class="empty">Aucun modèle ne correspond à ces filtres. Élargissez le budget ou le lieu de fabrication.</div>`;
+}
+function renderTable(list){
+  const th = (k, l) => `<th scope="col"><button data-k="${k}">${l}${state.sortKey === k ? (state.sortDir < 0 ? " ▼" : " ▲") : ""}</button></th>`;
+  const badge = v => v == null ? `<span class="badge na">n.d.</span>` : `<span class="badge" style="background:${col(v)}">${fmt(v)}</span>`;
+  document.getElementById("tableview").innerHTML = `<table>
+    <thead><tr><th scope="col"></th>${th("name","Modèle")}${th("g","Globale")}${th("s","Sécu.")}${th("q","Qual.")}${th("d","Dur.")}${th("a","Avis")}${th("price","Prix")}<th scope="col">Dimensions</th><th scope="col">Poids</th><th scope="col">Fabrication</th><th scope="col">Pliable</th><th scope="col">Sécurité (équipements)</th><th scope="col">Modularité</th><th scope="col">Avis clients</th></tr></thead>
+    <tbody>${sorted(list).map(m => `<tr class="${m.out ? "out" : ""}">
+      <td class="thumb">${visual(m, false)}</td>
+      <td><strong>${m.name}</strong><br><small style="color:var(--muted)">${m.out ? "Hors catégorie · " : ""}${CONF[m.conf][0]}</small></td>
+      <td class="n">${badge(g(m))}</td><td class="n">${badge(m.sc.s)}</td><td class="n">${badge(m.sc.q)}</td><td class="n">${badge(m.sc.d)}</td><td class="n">${badge(m.sc.a)}</td>
+      <td>${m.priceLabel}</td><td>${m.dims}</td><td>${m.weight}</td><td>${m.origin}</td><td>${m.foldLabel}</td><td>${m.safety}</td><td>${m.modular}</td><td>${m.rev.summary}</td>
+      </tr>`).join("")}</tbody></table>`;
+  document.querySelectorAll("#tableview th button").forEach(b => b.addEventListener("click", () => {
+    const k = b.dataset.k;
+    if (state.sortKey === k) state.sortDir *= -1; else { state.sortKey = k; state.sortDir = (k === "name" || k === "price") ? 1 : -1; }
+    syncControls(); render();
+  }));
+}
+function render(){
+  const list = visible();
+  document.getElementById("count").textContent = `${list.length} modèle${list.length > 1 ? "s" : ""} sur ${MODELS.length}`;
+  renderPodium(list);
+  if (state.view === "cards") renderCards(list); else renderTable(list);
+  document.getElementById("cards").hidden = state.view !== "cards";
+  document.getElementById("tableview").hidden = state.view !== "table";
+}
+function syncControls(){
+  ["s","q","d","a"].forEach(k => { document.getElementById("w-" + k).value = state.w[k]; document.getElementById("o-" + k).textContent = state.w[k]; });
+  document.querySelectorAll("#origin-chips .chip").forEach(x => x.setAttribute("aria-pressed", x.dataset.o === state.origin ? "true" : "false"));
+  document.querySelectorAll("#fold button").forEach(x => x.setAttribute("aria-pressed", x.dataset.f === state.fold ? "true" : "false"));
+  document.getElementById("budget").value = state.budget; document.getElementById("o-b").textContent = state.budget + " €";
+  ["unk","chair","unver","noavis"].forEach(k => document.getElementById(k).checked = state[k]);
+  const sel = document.getElementById("sort"); if ([...sel.options].some(o => o.value === state.sortKey)) sel.value = state.sortKey;
+  document.getElementById("v-cards").setAttribute("aria-pressed", state.view === "cards" ? "true" : "false");
+  document.getElementById("v-table").setAttribute("aria-pressed", state.view === "table" ? "true" : "false");
+}
+
+["s","q","d","a"].forEach(k => document.getElementById("w-" + k).addEventListener("input", e => { state.w[k] = +e.target.value; document.getElementById("o-" + k).textContent = e.target.value; render(); }));
+document.querySelectorAll("#origin-chips .chip").forEach(b => b.addEventListener("click", () => { state.origin = b.dataset.o; syncControls(); render(); }));
+document.querySelectorAll("#fold button").forEach(b => b.addEventListener("click", () => { state.fold = b.dataset.f; syncControls(); render(); }));
+document.getElementById("budget").addEventListener("input", e => { state.budget = +e.target.value; document.getElementById("o-b").textContent = e.target.value + " €"; render(); });
+["unk","chair","unver","noavis"].forEach(k => document.getElementById(k).addEventListener("change", e => { state[k] = e.target.checked; render(); }));
+document.getElementById("sort").addEventListener("change", e => { state.sortKey = e.target.value; state.sortDir = e.target.value === "price" ? 1 : -1; render(); });
+["cards","table"].forEach(v => document.getElementById("v-" + v).addEventListener("click", () => { state.view = v; syncControls(); render(); }));
+document.getElementById("reset").addEventListener("click", () => { const view = state.view; state = DEFAULTS(); state.view = view; syncControls(); render(); });
+syncControls();
+render();
+</script>
+</body>
+</html>
